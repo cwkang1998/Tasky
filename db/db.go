@@ -2,11 +2,10 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"logging_go_backend/db/sqlConst"
-	"logging_go_backend/models"
 
+	//Sqlite3 Driver import
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -51,33 +50,5 @@ func (d *Connection) CloseConn() {
 	err := d.dbInstance.Close()
 	if err != nil {
 		log.Fatal(err)
-	}
-}
-
-//GetAllOwners returns all existing owners
-func (d *Connection) GetAllOwners() {
-	queryString := "SELECT owner_id,owner_name,owner_email,last_login_time FROM owners;"
-	rows, err := d.dbInstance.Query(queryString)
-	if err != nil {
-		log.Fatalln("Query failed.")
-		log.Fatalln(err)
-	}
-	for rows.Next() {
-		var owner models.Owners
-		err := rows.Scan(&owner.OwnerID, &owner.OwnerName, &owner.OwnerEmail, &owner.LastLogin)
-		if err != nil {
-			fmt.Println("Scanning failed.")
-			fmt.Println(err)
-		}
-		fmt.Println(owner)
-	}
-}
-
-//AddOwner registers the user into database
-func (d *Connection) AddOwner(name, password, email string) {
-	queryString := "INSERT INTO owners(owner_name, owner_password, owner_email) VALUES (?,?,?);"
-	_, err := d.dbInstance.Exec(queryString, name, password, email)
-	if err != nil {
-		fmt.Println("Adding new owner failed: ", err)
 	}
 }

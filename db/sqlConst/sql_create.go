@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS projects(
 	title TEXT NOT NULL ,
 	description TEXT NOT NULL,
 	owner_id INTEGER NOT NULL,
+	status INTEGER NOT NULL,
 	FOREIGN KEY(owner_id) REFERENCES owners(owner_id)
 	);`
 

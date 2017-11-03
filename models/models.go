@@ -28,6 +28,7 @@ type Project struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	OwnerID     int    `json:"owner_id"`
+	Status      string `json:"status"`
 }
 
 type Owners struct {
