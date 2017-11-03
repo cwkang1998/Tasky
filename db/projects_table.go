@@ -35,11 +35,14 @@ func (d *Connection) GetProjects() []models.Project {
 		err := rows.Scan(&proj.ProjectID,
 			&proj.TimeCreated, &proj.Title, &proj.Description,
 			&proj.OwnerID, &proj.Status)
+		//Error handling
 		if err != nil {
 			fmt.Println("Return Project Fail")
 			fmt.Println(err)
 		}
-		ProjList = append(ProjList, proj)
+		if proj.ProjectID != nil {
+			ProjList = append(ProjList, proj)
+		}
 	}
 	return ProjList
 }
