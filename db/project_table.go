@@ -8,8 +8,8 @@ import (
 )
 
 //AddNewProject creates a new project
-func (d *Connection) AddNewProject(timeCreated string, title string, description string, ownerID int, status int) {
-	_, err := d.dbInstance.Exec(sqlConst.AddNewProject, timeCreated, title, description, ownerID, status)
+func (d *Connection) AddNewProject(proj *models.Project) {
+	_, err := d.dbInstance.Exec(sqlConst.AddNewProject, proj.TimeCreated, proj.Title, proj.Description, proj.OwnerID, proj.Status)
 	if err != nil {
 		log.Fatalln("Failed to add new project", err)
 	}

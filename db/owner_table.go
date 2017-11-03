@@ -21,7 +21,7 @@ func (d *Connection) GetAllOwners() {
 			fmt.Println("Returning Owners failed.")
 			fmt.Println(err)
 		}
-		fmt.Println(owner)
+		fmt.Println(*owner.OwnerName)
 	}
 }
 

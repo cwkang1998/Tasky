@@ -8,8 +8,8 @@ import (
 )
 
 //AddNewTask creates a new task
-func (d *Connection) AddNewTask(timeCreated string, title string, description string, ownerID int, projectID int, logID int, status int) {
-	_, err := d.dbInstance.Exec(sqlConst.AddNewTask, timeCreated, title, description, ownerID, projectID, logID, status)
+func (d *Connection) AddNewTask(tsk models.Task) {
+	_, err := d.dbInstance.Exec(sqlConst.AddNewTask, tsk.TimeCreated, tsk.Title, tsk.Description, tsk.OwnerID, tsk.ProjectID, tsk.LogID, tsk.Status)
 	if err != nil {
 		log.Fatalln("Failed to add new task", err)
 	}

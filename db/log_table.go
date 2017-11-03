@@ -11,8 +11,8 @@ import (
 
 //AddNewLogEntry creates a new entry in the entry table
 //However it DOES NOT include the adding of new task
-func (d *Connection) AddNewLogEntry(timeCreated string, title string, description string, ownerID int, projectID int) {
-	_, err := d.dbInstance.Exec(sqlConst.AddNewLogEntry, timeCreated, title, description, ownerID, projectID)
+func (d *Connection) AddNewLogEntry(logentry models.LogEntry) {
+	_, err := d.dbInstance.Exec(sqlConst.AddNewLogEntry, logentry.TimeCreated, logentry.Title, logentry.Description, logentry.OwnerID, logentry.ProjectID)
 	if err != nil {
 		log.Fatalln("Failed to add new log entry:", err)
 	}
