@@ -27,7 +27,11 @@ func (a *ApiHandler) AddProjectEndpoint(w http.ResponseWriter, r *http.Request) 
 
 		//Json check
 		if proj.Title != nil && proj.Description != nil && proj.TimeCreated != nil && proj.OwnerID != nil && proj.Status != nil {
-			a.Conn.AddNewProject(&proj)
+			err := a.Conn.AddNewProject(&proj)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
 		} else {
 			http.Error(w, "Field Mismatch", 400)
 			return
@@ -41,7 +45,11 @@ func (a *ApiHandler) AddProjectEndpoint(w http.ResponseWriter, r *http.Request) 
 func (a *ApiHandler) GetAllProjectsEndpoint(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		//Encoding json request
-		projectList := a.Conn.GetProjects()
+		projectList, err := a.Conn.GetProjects()
+		if err != nil {
+			http.Error(w, "Fail to get projects", 400)
+			return
+		}
 		if len(projectList) > 0 {
 			err := json.NewEncoder(w).Encode(projectList)
 			if err != nil {
