@@ -11,7 +11,7 @@ import (
 func main() {
 	apiHandler := api.ApiHandler{db.CreateConn()}
 	http.HandleFunc("/addproject", apiHandler.AddProjectEndpoint)
-	http.HandleFunc("/getprojects", apiHandler.GetAllProjectsEndpoint)
+	http.HandleFunc("/getprojects", apiHandler.GetProjectsEndpoint)
 	http.ListenAndServe(":8080", nil)
 	defer apiHandler.Conn.CloseConn()
 }
