@@ -7,7 +7,7 @@ import (
 )
 
 //AddNewProject creates a new project
-func (d *Connection) AddNewProject(proj *models.Project) error {
+func (d *Connection) AddNewProject(proj models.Project) error {
 	_, err := d.dbInstance.Exec(sqlConst.AddNewProject, proj.TimeCreated, proj.Title, proj.Description, proj.OwnerID, proj.Status)
 
 	return err

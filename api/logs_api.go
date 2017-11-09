@@ -7,8 +7,8 @@ import (
 	"strconv"
 )
 
-//AddProjectEndpoint is an endpoint to add a new project
-func (a *ApiHandler) AddProjectEndpoint(w http.ResponseWriter, r *http.Request) {
+//AddLogsEndpoint is an endpoint to add a new log
+func (a *ApiHandler) AddLogEndpoint(w http.ResponseWriter, r *http.Request) {
 	//Cors
 	a.corsHandler(&w)
 	if r.Method == "OPTIONS" {
@@ -24,17 +24,17 @@ func (a *ApiHandler) AddProjectEndpoint(w http.ResponseWriter, r *http.Request) 
 		}
 
 		//Decoding json request
-		var proj models.Project
+		var logsEn models.LogEntry
 
-		err := json.NewDecoder(r.Body).Decode(&proj)
+		err := json.NewDecoder(r.Body).Decode(&logsEn)
 		if err != nil {
 			http.Error(w, err.Error(), 400)
 			return
 		}
 
 		//Json check
-		if proj.Title != nil && proj.Description != nil && proj.TimeCreated != nil && proj.OwnerID != nil && proj.Status != nil {
-			err := a.Conn.AddNewProject(proj)
+		if logsEn.Title != nil && logsEn.Description != nil && logsEn.TimeCreated != nil && logsEn.OwnerID != nil && logsEn.ProjectID != nil {
+			err := a.Conn.AddNewLogEntry(logsEn)
 			if err != nil {
 				http.Error(w, err.Error(), 400)
 				return
@@ -50,8 +50,8 @@ func (a *ApiHandler) AddProjectEndpoint(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-//GetProjectsEndpoint gets all the projects
-func (a *ApiHandler) GetProjectsEndpoint(w http.ResponseWriter, r *http.Request) {
+//GetLogsEndpoint gets the log entries
+func (a *ApiHandler) GetLogsEndpoint(w http.ResponseWriter, r *http.Request) {
 	//Cors
 	a.corsHandler(&w)
 	if r.Method == "OPTIONS" {
@@ -67,16 +67,16 @@ func (a *ApiHandler) GetProjectsEndpoint(w http.ResponseWriter, r *http.Request)
 			return
 		}
 		//Look for form value with key "id"
-		//If key exist query specific projects, else query all projects
+		//If key exist query specific log entry, else query all projects
 		id := r.FormValue("id")
 		if len(id) == 0 {
-			projectList, err := a.Conn.GetProjects()
+			logEntriesList, err := a.Conn.GetProjects()
 			if err != nil {
 				http.Error(w, "Fail to get projects", 400)
 				return
 			}
-			if len(projectList) > 0 {
-				err := json.NewEncoder(w).Encode(projectList)
+			if len(logEntriesList) > 0 {
+				err := json.NewEncoder(w).Encode(logEntriesList)
 				if err != nil {
 					http.Error(w, err.Error(), 400)
 					return
@@ -91,12 +91,12 @@ func (a *ApiHandler) GetProjectsEndpoint(w http.ResponseWriter, r *http.Request)
 				http.Error(w, "Bad Form Value", 400)
 				return
 			}
-			project, err2 := a.Conn.GetProject(idValue)
+			logEntry, err2 := a.Conn.GetLogEntry(idValue)
 			if err2 != nil {
 				http.Error(w, "Fail to get project", 400)
 				return
 			}
-			err3 := json.NewEncoder(w).Encode(project)
+			err3 := json.NewEncoder(w).Encode(logEntry)
 			if err3 != nil {
 				http.Error(w, err.Error(), 400)
 				return
