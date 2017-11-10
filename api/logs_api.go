@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-//AddLogsEndpoint is an endpoint to add a new log
+//AddLogEndpoint is an endpoint to add a new log
 func (a *ApiHandler) AddLogEndpoint(w http.ResponseWriter, r *http.Request) {
 	//Cors
 	a.corsHandler(&w)
@@ -66,13 +66,13 @@ func (a *ApiHandler) GetLogsEndpoint(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error in Form", 400)
 			return
 		}
-		//Look for form value with key "id"
-		//If key exist query specific log entry, else query all projects
-		id := r.FormValue("id")
+		//Look for form value with key "log_id"
+		//If key exist query specific log entry, else query all logs
+		id := r.FormValue("log_id")
 		if len(id) == 0 {
 			logEntriesList, err := a.Conn.GetProjects()
 			if err != nil {
-				http.Error(w, "Fail to get projects", 400)
+				http.Error(w, "Fail to get tasks", 400)
 				return
 			}
 			if len(logEntriesList) > 0 {
@@ -93,7 +93,7 @@ func (a *ApiHandler) GetLogsEndpoint(w http.ResponseWriter, r *http.Request) {
 			}
 			logEntry, err2 := a.Conn.GetLogEntry(idValue)
 			if err2 != nil {
-				http.Error(w, "Fail to get project", 400)
+				http.Error(w, "Fail to get tasks", 400)
 				return
 			}
 			err3 := json.NewEncoder(w).Encode(logEntry)

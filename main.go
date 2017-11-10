@@ -10,10 +10,14 @@ import (
 
 func main() {
 	apiHandler := api.ApiHandler{Conn: db.CreateConn()}
-	http.HandleFunc("/addproject", apiHandler.AddProjectEndpoint)
-	http.HandleFunc("/getprojects", apiHandler.GetProjectsEndpoint)
-	http.HandleFunc("/addlog", apiHandler.AddLogEndpoint)
-	http.HandleFunc("/getlogs", apiHandler.GetLogsEndpoint)
+	http.HandleFunc("/addProject", apiHandler.AddProjectEndpoint)
+	http.HandleFunc("/getProjects", apiHandler.GetProjectsEndpoint)
+	http.HandleFunc("/setProjStatus", apiHandler.SetProjStatusEndpoint)
+	http.HandleFunc("/addLog", apiHandler.AddLogEndpoint)
+	http.HandleFunc("/getLogs", apiHandler.GetLogsEndpoint)
+	http.HandleFunc("/addTask", apiHandler.AddTaskEndpoint)
+	http.HandleFunc("/getTasks", apiHandler.GetTasksEndpoint)
+	http.HandleFunc("/setTaskStatus", apiHandler.SetTaskStatusEndpoint)
 	http.ListenAndServe(":8080", nil)
 	defer apiHandler.Conn.CloseConn()
 }
