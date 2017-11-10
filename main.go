@@ -18,6 +18,6 @@ func main() {
 	http.HandleFunc("/addTask", apiHandler.AddTaskEndpoint)
 	http.HandleFunc("/getTasks", apiHandler.GetTasksEndpoint)
 	http.HandleFunc("/setTaskStatus", apiHandler.SetTaskStatusEndpoint)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe("172.17.7.49:8080", nil)
 	defer apiHandler.Conn.CloseConn()
 }

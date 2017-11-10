@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"logging_go_backend/models"
 	"net/http"
 	"strconv"
@@ -54,6 +55,7 @@ func (a *ApiHandler) AddLogEndpoint(w http.ResponseWriter, r *http.Request) {
 func (a *ApiHandler) GetLogsEndpoint(w http.ResponseWriter, r *http.Request) {
 	//Cors
 	a.corsHandler(&w)
+	fmt.Println(r.Method)
 	if r.Method == "OPTIONS" {
 		return
 	}
@@ -70,7 +72,7 @@ func (a *ApiHandler) GetLogsEndpoint(w http.ResponseWriter, r *http.Request) {
 		//If key exist query specific log entry, else query all logs
 		id := r.FormValue("log_id")
 		if len(id) == 0 {
-			logEntriesList, err := a.Conn.GetProjects()
+			logEntriesList, err := a.Conn.GetLogEntriesList()
 			if err != nil {
 				http.Error(w, "Fail to get tasks", 400)
 				return
@@ -84,6 +86,8 @@ func (a *ApiHandler) GetLogsEndpoint(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusOK)
 			}
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
 		} else {
 			//String to int conversion
 			idValue, err1 := strconv.Atoi(id)
