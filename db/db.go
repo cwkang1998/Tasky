@@ -24,7 +24,7 @@ func tryInitDatabase(db *sql.DB) {
 
 //CreateConn generates a new Connection instance to the caller
 func CreateConn() *Connection {
-	dbInstance, err := sql.Open("sqlite3", "./db/sqlite3/go_backend.db")
+	dbInstance, err := sql.Open("sqlite3", "./db/tasky_app.db")
 	if err != nil {
 		log.Fatal("Fail to establish connection")
 	} else {
