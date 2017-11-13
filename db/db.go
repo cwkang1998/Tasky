@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"projects/logging_backend/db/sqlConst"
+	"projects/logging_backend/models"
 
 	//Sqlite3 Driver import
 	_ "github.com/mattn/go-sqlite3"
@@ -15,21 +16,9 @@ type Connection struct {
 }
 
 func tryInitDatabase(db *sql.DB) {
-	_, err := db.Exec(sqlConst.LogTableCreate)
+	_, err := db.Exec(sqlConst.TaskTableCreate)
 	if err != nil {
 		panic(err)
-	}
-	_, err1 := db.Exec(sqlConst.TaskTableCreate)
-	if err1 != nil {
-		panic(err1)
-	}
-	_, err2 := db.Exec(sqlConst.ProjectsTableCreate)
-	if err2 != nil {
-		panic(err2)
-	}
-	_, err3 := db.Exec(sqlConst.OwnersTableCreate)
-	if err3 != nil {
-		panic(err3)
 	}
 }
 
@@ -51,4 +40,41 @@ func (d *Connection) CloseConn() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+//AddNewTask creates a new task
+func (d *Connection) AddNewTask(tsk models.Task) error {
+	_, err := d.dbInstance.Exec(AddNewTask, tsk.TimeCreated, tsk.Description)
+	return err
+}
+
+//SetTaskStatus set the status of the task
+func (d *Connection) SetTaskStatus(id int, time string, status int) error {
+	_, err := d.dbInstance.Exec(SetTaskStatus, status, time, id)
+	return err
+}
+
+//DeleteTask deletes a task
+func (d *Connection) DeleteTask(id int) error {
+	_, err := d.dbInstance.Exec(DeleteTask, id)
+	return err
+}
+
+//GetTasks returns all existing tasks
+func (d *Connection) GetTasks(status int) ([]models.Task, error) {
+	rows, err := d.dbInstance.Query(GetTasks, status)
+	if err != nil {
+		return nil, err
+	}
+	var TasksList = make([]models.Task, 0)
+	for rows.Next() {
+		var task models.Task
+		err := rows.Scan(&task.TaskID,
+			&task.TimeCreated, &task.Description, &task.Status)
+		if err != nil {
+			return nil, err
+		}
+		TasksList = append(TasksList, task)
+	}
+	return TasksList, err
 }
