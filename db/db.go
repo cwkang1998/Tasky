@@ -3,8 +3,8 @@ package db
 import (
 	"database/sql"
 	"log"
-	"projects/logging_backend/db/sqlConst"
-	"projects/logging_backend/models"
+	"projects/tasky_backend/models"
+	"time"
 
 	//Sqlite3 Driver import
 	_ "github.com/mattn/go-sqlite3"
@@ -16,7 +16,7 @@ type Connection struct {
 }
 
 func tryInitDatabase(db *sql.DB) {
-	_, err := db.Exec(sqlConst.TaskTableCreate)
+	_, err := db.Exec(TaskTableCreate)
 	if err != nil {
 		panic(err)
 	}
@@ -44,13 +44,13 @@ func (d *Connection) CloseConn() {
 
 //AddNewTask creates a new task
 func (d *Connection) AddNewTask(tsk models.Task) error {
-	_, err := d.dbInstance.Exec(AddNewTask, tsk.TimeCreated, tsk.Description)
+	_, err := d.dbInstance.Exec(AddNewTask, time.Now().Format("yyyy-MM-dd"), tsk.Description)
 	return err
 }
 
 //SetTaskStatus set the status of the task
-func (d *Connection) SetTaskStatus(id int, time string, status int) error {
-	_, err := d.dbInstance.Exec(SetTaskStatus, status, time, id)
+func (d *Connection) SetTaskStatus(id int, status int) error {
+	_, err := d.dbInstance.Exec(SetTaskStatus, status, time.Now().Format("yyyy-MM-dd"), id)
 	return err
 }
 
@@ -70,7 +70,7 @@ func (d *Connection) GetTasks(status int) ([]models.Task, error) {
 	for rows.Next() {
 		var task models.Task
 		err := rows.Scan(&task.TaskID,
-			&task.TimeCreated, &task.Description, &task.Status)
+			&task.Time, &task.Description, &task.Status)
 		if err != nil {
 			return nil, err
 		}

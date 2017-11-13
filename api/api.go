@@ -3,8 +3,8 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"projects/logging_backend/db"
-	"projects/logging_backend/models"
+	"projects/tasky_backend/db"
+	"projects/tasky_backend/models"
 	"strconv"
 )
 
@@ -16,7 +16,7 @@ func (a *ApiHandler) corsHandler(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	(*w).Header().Set("Access-Control-Allow-Headers",
-		"Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
+		"Accept, Content-Type, Content-Length, Accept-Encoding")
 }
 
 //AddTaskEndpoint is an endpoint to add a new task
@@ -45,9 +45,7 @@ func (a *ApiHandler) AddTaskEndpoint(w http.ResponseWriter, r *http.Request) {
 		}
 
 		//Json check
-		if task.Title != nil && task.Description != nil &&
-			task.TimeCreated != nil && task.OwnerID != nil &&
-			task.ProjectID != nil && task.LogID != nil && task.Status != nil {
+		if task.Description != nil && task.Time != nil {
 			err := a.Conn.AddNewTask(task)
 			if err != nil {
 				http.Error(w, err.Error(), 400)
@@ -127,34 +125,21 @@ func (a *ApiHandler) GetTasksEndpoint(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error in Form", 400)
 			return
 		}
-		//Look for form value with key "task_id"
-		//If key exist query specific task, else query all tasks
-		id := r.FormValue("task_id")
-		if len(id) == 0 {
-			tasksList, err := a.Conn.GetTasks()
-			if err != nil {
-				http.Error(w, "Fail to get tasks", 400)
-				return
-			}
-			if len(tasksList) > 0 {
-				err := json.NewEncoder(w).Encode(tasksList)
-				if err != nil {
-					http.Error(w, err.Error(), 400)
-					return
-				}
-				w.Header().Set("Content-Type", "application/json")
-				w.WriteHeader(http.StatusOK)
-			}
+		//Look for form value with key "status"
+		//If key exist query, else ignore
+		status := r.FormValue("status")
+		if len(status) == 0 {
+			http.Error(w, "Unspecific Query: Lacking 'Status' Params", 400)
 		} else {
 			//String to int conversion
-			idValue, err1 := strconv.Atoi(id)
+			statusValue, err1 := strconv.Atoi(status)
 			if err1 != nil {
 				http.Error(w, "Bad Form Value", 400)
 				return
 			}
-			task, err2 := a.Conn.GetTask(idValue)
+			task, err2 := a.Conn.GetTasks(statusValue)
 			if err2 != nil {
-				http.Error(w, "Fail to get task", 400)
+				http.Error(w, "Fail to get tasks", 400)
 				return
 			}
 			err3 := json.NewEncoder(w).Encode(task)
@@ -163,6 +148,45 @@ func (a *ApiHandler) GetTasksEndpoint(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+		}
+	} else {
+		http.Error(w, "Invalid Request", 400)
+	}
+}
+
+// DeleteTaskEndpoint deletes the tasks
+func (a *ApiHandler) DeleteTaskEndpoint(w http.ResponseWriter, r *http.Request) {
+	a.corsHandler(&w)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	//Method Check
+	if r.Method == "GET" {
+		//Parse form for query values
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Error in Form", 400)
+			return
+		}
+		//Look for form value with key "task_id"
+		//If key exist query, else ignore
+		id := r.FormValue("task_id")
+		if len(id) == 0 {
+			http.Error(w, "Unspecific Query: Lacking 'task_id' Params", 400)
+		} else {
+			//String to int conversion
+			idValue, err1 := strconv.Atoi(id)
+			if err1 != nil {
+				http.Error(w, "Bad Form Value", 400)
+				return
+			}
+			err2 := a.Conn.DeleteTask(idValue)
+			if err2 != nil {
+				http.Error(w, "Fail to get tasks", 400)
+				return
+			}
 			w.WriteHeader(http.StatusOK)
 		}
 	} else {

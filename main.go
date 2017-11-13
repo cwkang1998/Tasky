@@ -2,17 +2,18 @@ package main
 
 import (
 	"net/http"
-	"projects/logging_backend/api"
-	"projects/logging_backend/db"
+	"projects/tasky_backend/api"
+	"projects/tasky_backend/db"
 )
 
 //ApiHandler is a custom handler created to enable passing in of DB api
 
 func main() {
 	apiHandler := api.ApiHandler{Conn: db.CreateConn()}
-	http.HandleFunc("/addTask", apiHandler.AddTaskEndpoint)
-	http.HandleFunc("/getTasks", apiHandler.GetTasksEndpoint)
-	http.HandleFunc("/setTaskStatus", apiHandler.SetTaskStatusEndpoint)
+	http.HandleFunc("/addTsk", apiHandler.AddTaskEndpoint)
+	http.HandleFunc("/getTsks", apiHandler.GetTasksEndpoint)
+	http.HandleFunc("/setTskStatus", apiHandler.SetTaskStatusEndpoint)
+	http.HandleFunc("/delTsk", apiHandler.DeleteTaskEndpoint)
 	http.ListenAndServe("172.17.7.49:8080", nil)
 	defer apiHandler.Conn.CloseConn()
 }
