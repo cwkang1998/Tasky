@@ -2,8 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"logging_go_backend/models"
 	"net/http"
+	"projects/logging_backend/models"
 	"strconv"
 )
 

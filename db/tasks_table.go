@@ -1,8 +1,8 @@
 package db
 
 import (
-	"logging_go_backend/db/sqlConst"
-	"logging_go_backend/models"
+	"projects/logging_backend/db/sqlConst"
+	"projects/logging_backend/models"
 )
 
 //AddNewTask creates a new task

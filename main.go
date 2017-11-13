@@ -1,9 +1,9 @@
 package main
 
 import (
-	"logging_go_backend/api"
-	"logging_go_backend/db"
 	"net/http"
+	"projects/logging_backend/api"
+	"projects/logging_backend/db"
 )
 
 //ApiHandler is a custom handler created to enable passing in of DB api

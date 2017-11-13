@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 	"log"
-	"logging_go_backend/models"
+	"projects/logging_backend/models"
 )
 
 //GetAllOwners returns all existing owners

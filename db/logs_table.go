@@ -3,8 +3,8 @@ package db
 //log_table manipulates the log_entry table
 
 import (
-	"logging_go_backend/db/sqlConst"
-	"logging_go_backend/models"
+	"projects/logging_backend/db/sqlConst"
+	"projects/logging_backend/models"
 )
 
 //AddNewLogEntry creates a new entry in the entry table

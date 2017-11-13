@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"log"
-	"logging_go_backend/db/sqlConst"
+	"projects/logging_backend/db/sqlConst"
 
 	//Sqlite3 Driver import
 	_ "github.com/mattn/go-sqlite3"

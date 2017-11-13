@@ -2,8 +2,8 @@ package db
 
 import (
 	"log"
-	"logging_go_backend/db/sqlConst"
-	"logging_go_backend/models"
+	"projects/logging_backend/db/sqlConst"
+	"projects/logging_backend/models"
 )
 
 //AddNewProject creates a new project

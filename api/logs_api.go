@@ -3,8 +3,8 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"logging_go_backend/models"
 	"net/http"
+	"projects/logging_backend/models"
 	"strconv"
 )
 

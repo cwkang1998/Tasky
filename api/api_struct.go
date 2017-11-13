@@ -1,8 +1,8 @@
 package api
 
 import (
-	"logging_go_backend/db"
 	"net/http"
+	"projects/logging_backend/db"
 )
 
 type ApiHandler struct {
