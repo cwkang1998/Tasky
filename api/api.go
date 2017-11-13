@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"projects/tasky_backend/db"
-	"projects/tasky_backend/models"
 	"strconv"
 )
 
@@ -31,34 +30,40 @@ func (a *ApiHandler) AddTaskEndpoint(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		//Body Check
 		if r.Body == nil {
-			http.Error(w, "Invalid Request Body", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Invalid Request Body"))
 			return
 		}
 
 		//Decoding json request
-		var task models.Task
-
-		err := json.NewDecoder(r.Body).Decode(&task)
-		if err != nil {
-			http.Error(w, err.Error(), 400)
-			return
+		var descStruct struct {
+			Description *string `json:"description"`
 		}
 
+		err := json.NewDecoder(r.Body).Decode(&descStruct)
+		if err != nil {
+			w.WriteHeader(400)
+			w.Write([]byte(err.Error()))
+			return
+		}
 		//Json check
-		if task.Description != nil && task.Time != nil {
-			err := a.Conn.AddNewTask(task)
+		if descStruct.Description != nil {
+			err := a.Conn.AddNewTask(descStruct.Description)
 			if err != nil {
-				http.Error(w, err.Error(), 400)
+				w.WriteHeader(400)
+				w.Write([]byte(err.Error()))
 				return
 			}
 			w.WriteHeader(http.StatusOK)
 
 		} else {
-			http.Error(w, "Field Mismatch", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Field Mismatch"))
 			return
 		}
 	} else {
-		http.Error(w, "Invalid Request", 400)
+		w.WriteHeader(400)
+		w.Write([]byte("Invalid Request"))
 	}
 }
 
@@ -75,7 +80,8 @@ func (a *ApiHandler) SetTaskStatusEndpoint(w http.ResponseWriter, r *http.Reques
 		//Parse form for query values
 		err := r.ParseForm()
 		if err != nil {
-			http.Error(w, "Error in Form", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Form Error"))
 			return
 		}
 		//Look for form value with key "task_id" and status
@@ -85,27 +91,32 @@ func (a *ApiHandler) SetTaskStatusEndpoint(w http.ResponseWriter, r *http.Reques
 			//String to int conversion
 			idValue, err1 := strconv.Atoi(id)
 			if err1 != nil {
-				http.Error(w, "Bad Form Value", 400)
+				w.WriteHeader(400)
+				w.Write([]byte("Bad Form Value"))
 				return
 			}
 			statusValue, err2 := strconv.Atoi(status)
 			if err2 != nil {
-				http.Error(w, "Bad Form Value", 400)
+				w.WriteHeader(400)
+				w.Write([]byte("Bad Form Value"))
 				return
 			}
 			err3 := a.Conn.SetTaskStatus(idValue, statusValue)
 			if err3 != nil {
-				http.Error(w, "Fail to set task status", 400)
+				w.WriteHeader(400)
+				w.Write([]byte("Fail to set task status"))
 				return
 			}
 			w.WriteHeader(http.StatusOK)
 
 		} else {
-			http.Error(w, "Empty Form Value", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Empty Form Value"))
 			return
 		}
 	} else {
-		http.Error(w, "Invalid Request", 400)
+		w.WriteHeader(400)
+		w.Write([]byte("Invalid Request"))
 	}
 }
 
@@ -122,36 +133,41 @@ func (a *ApiHandler) GetTasksEndpoint(w http.ResponseWriter, r *http.Request) {
 		//Parse form for query values
 		err := r.ParseForm()
 		if err != nil {
-			http.Error(w, "Error in Form", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Form Error"))
 			return
 		}
 		//Look for form value with key "status"
 		//If key exist query, else ignore
 		status := r.FormValue("status")
 		if len(status) == 0 {
-			http.Error(w, "Unspecific Query: Lacking 'Status' Params", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Unspecific Query: Lacking 'Status' Params"))
 		} else {
 			//String to int conversion
 			statusValue, err1 := strconv.Atoi(status)
 			if err1 != nil {
-				http.Error(w, "Bad Form Value", 400)
+				w.WriteHeader(400)
+				w.Write([]byte("Bad Form Value"))
 				return
 			}
 			task, err2 := a.Conn.GetTasks(statusValue)
 			if err2 != nil {
-				http.Error(w, "Fail to get tasks", 400)
-				return
-			}
-			err3 := json.NewEncoder(w).Encode(task)
-			if err3 != nil {
-				http.Error(w, err.Error(), 400)
+				w.WriteHeader(400)
+				w.Write([]byte("Fail to get tasks"))
 				return
 			}
 			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
+			err3 := json.NewEncoder(w).Encode(task)
+			if err3 != nil {
+				w.WriteHeader(400)
+				w.Write([]byte(err.Error()))
+				return
+			}
 		}
 	} else {
-		http.Error(w, "Invalid Request", 400)
+		w.WriteHeader(400)
+		w.Write([]byte("Invalid Request"))
 	}
 }
 
@@ -167,29 +183,34 @@ func (a *ApiHandler) DeleteTaskEndpoint(w http.ResponseWriter, r *http.Request) 
 		//Parse form for query values
 		err := r.ParseForm()
 		if err != nil {
-			http.Error(w, "Error in Form", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Form Error"))
 			return
 		}
 		//Look for form value with key "task_id"
 		//If key exist query, else ignore
 		id := r.FormValue("task_id")
 		if len(id) == 0 {
-			http.Error(w, "Unspecific Query: Lacking 'task_id' Params", 400)
+			w.WriteHeader(400)
+			w.Write([]byte("Unspecific Query: Lacking 'task_id' Params"))
 		} else {
 			//String to int conversion
 			idValue, err1 := strconv.Atoi(id)
 			if err1 != nil {
-				http.Error(w, "Bad Form Value", 400)
+				w.WriteHeader(400)
+				w.Write([]byte("Bad Form Value"))
 				return
 			}
 			err2 := a.Conn.DeleteTask(idValue)
 			if err2 != nil {
-				http.Error(w, "Fail to get tasks", 400)
+				w.WriteHeader(400)
+				w.Write([]byte("Fail to delete tasks"))
 				return
 			}
 			w.WriteHeader(http.StatusOK)
 		}
 	} else {
-		http.Error(w, "Invalid Request", 400)
+		w.WriteHeader(400)
+		w.Write([]byte("Invalid Request"))
 	}
 }

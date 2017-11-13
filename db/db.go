@@ -43,10 +43,25 @@ func (d *Connection) CloseConn() {
 }
 
 //AddNewTask creates a new task
-func (d *Connection) AddNewTask(tsk models.Task) error {
-	_, err := d.dbInstance.Exec(AddNewTask, time.Now().Format("yyyy-MM-dd"), tsk.Description)
+func (d *Connection) AddNewTask(description *string) error {
+	_, err := d.dbInstance.Exec(AddNewTask, time.Now().Format("2006-01-02"), *description)
 	return err
 }
+
+//Future possible implementation
+// func (d *Connection) AddNewTask(tsk models.Task) (*models.Task, error) {
+// 	_, err := d.dbInstance.Exec(AddNewTask, time.Now().Format("yyyy-MM-dd"), tsk.Description)
+// 	if err != nil {
+// 		return &models.Task{}, err
+// 	}
+// 	row := d.dbInstance.QueryRow(QueryNewTask)
+// 	var task models.Task
+// 	err1 := row.Scan(&task.TaskID, &task.Time, &task.Description, &task.Status)
+// 	if err1 != nil {
+// 		return &models.Task{}, err1
+// 	}
+// 	return &task, err1
+// }
 
 //SetTaskStatus set the status of the task
 func (d *Connection) SetTaskStatus(id int, status int) error {

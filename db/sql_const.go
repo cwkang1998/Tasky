@@ -15,12 +15,16 @@ INSERT INTO
 tasks(time, description, status)
 VALUES(?,?,0);`
 
+const QueryNewTask string = `
+SELECT * FROM tasks WHERE status = 0 ORDER BY id DESC LIMIT 1;
+`
+
 const SetTaskStatus string = `
 UPDATE tasks SET status = ?, time = ? WHERE task_id = ?;`
 
 const GetTasks string = `
 SELECT task_id, time,
-description FROM tasks WHERE status = ?;`
+description,status FROM tasks WHERE status = ?;`
 
 const DeleteTask string = `
 DELETE FROM tasks WHERE task_id = ?;`
