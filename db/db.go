@@ -65,7 +65,7 @@ func (d *Connection) AddNewTask(description *string) error {
 
 //SetTaskStatus set the status of the task
 func (d *Connection) SetTaskStatus(id int, status int) error {
-	_, err := d.dbInstance.Exec(SetTaskStatus, status, time.Now().Format("yyyy-MM-dd"), id)
+	_, err := d.dbInstance.Exec(SetTaskStatus, status, time.Now().Format("2006-01-02"), id)
 	return err
 }
 
