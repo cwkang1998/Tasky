@@ -2,8 +2,8 @@ package main
 
 import (
 	"net/http"
-	"projects/tasky_backend/api"
-	"projects/tasky_backend/db"
+	"projects/tasky_app/api"
+	"projects/tasky_app/db"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {

@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"projects/tasky_backend/db"
+	"projects/tasky_app/db"
 	"strconv"
 )
 

@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"log"
-	"projects/tasky_backend/models"
+	"projects/tasky_app/models"
 	"time"
 
 	//Sqlite3 Driver import
