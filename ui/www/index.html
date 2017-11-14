@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./js/endpoint.js"></script>
+    <script src="./js/helper.js"></script>
+    <script src="./js/pending.js"></script>
+    <script src="./js/completed.js"></script>
+    <title>
+        Tasky
+    </title>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="app-title">Tasky</h2>
+            </div>
+        </div>
+    </header>
+    <!-- Page Contents -->
+    <div class="container content">
+        <div class="row">
+            <div class="col-md-12">
+
+                <!-- Contents -->
+                <div class="container-fluid content">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="clearfix">
+                                <h4 class="pull-left">Pending Tasks</h4>
+                                <a id="addNewTasks" class="btn btn-default pull-right">
+                                    Add New Task
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                            </div>
+                            <hr style="margin-top:10px;">
+
+                            <!-- Dynamic content -->
+                            <div id="pendingTasks" class="tasks-list">
+
+                                <!-- Display if no content present -->
+                                <div id="placeholder-pending" class="text-center">
+                                    <h3>No new tasks.</h3>
+                                </div>
+
+                                <!-- Add effect -->
+                                <div id="newTasks" class="tasks-element shadow-dim-post container-fluid clearfix">
+                                    <input type="text" name="newtasks" id="taskInput" class="invisible-input pull-right"></input>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Completed Tasks</h4>
+                            <hr>
+                            <!-- Dynamic content -->
+                            <div id="completedTasks" class="tasks-list">
+
+                                <!-- Display if no content present -->
+                                <div id="placeholder-completed" class="text-center">
+                                    <h3>No completed tasks.</h3>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- Alert Box -->
+                <div class="container fixed">
+                    <div class="row">
+                        <div id="alert-pop-up" class="col-md-12"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="./js/index.js"></script>
+
+</html>
